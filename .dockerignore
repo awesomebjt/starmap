@@ -1,0 +1,17 @@
+# .dockerignore — what `docker build .` may send to the Docker daemon
+#
+# The "build context" is every file under the directory given to
+# `docker build`, uploaded to the daemon BEFORE the Dockerfile runs. This
+# tree can hold several build directories (build-release/, build-debug/,
+# each with ~1 GB of _deps), screenshots and probe output, so sending it all
+# would make every `docker build` slow for nothing.
+#
+# The image needs only three files (the Dockerfile COPYs nothing else: the
+# source itself is MOUNTED at run time, not baked in). So this is an
+# ALLOW-LIST: exclude everything, then re-include exactly what's used.
+# New files, build dirs or secrets in the tree can then never leak into the
+# context by accident.
+*
+!cmake/DependencyPins.cmake
+!cmake/Prefetch.cmake
+!docker/entrypoint.sh
